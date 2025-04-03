@@ -1,8 +1,10 @@
 export interface Input {
     dryRun: boolean;
     verbose: boolean;
+    debug: boolean;
+    model: string;
     openaiApiKey: string;
-    diff: boolean;
-    log: boolean;
+    contentTypes: string[];
+    instructions: string;
 }
 

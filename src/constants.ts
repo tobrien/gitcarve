@@ -20,3 +20,26 @@ export const DATE_FORMAT_SECONDS = 'ss';
 export const DATE_FORMAT_MILLISECONDS = 'SSS';
 export const DEFAULT_VERBOSE = false;
 export const DEFAULT_DRY_RUN = false;
+export const DEFAULT_DEBUG = false;
+export const DEFAULT_MODEL = 'gpt-4o-mini';
+export const DEFAULT_CONTENT_TYPES = ['diff'];
+
+export const ALLOWED_CONTENT_TYPES = ['log', 'diff'];
+
+export const DEFAULT_INSTRUCTIONS_FILE = './.gitchange/instructions.md';
+
+export const DEFAULT_INSTRUCTIONS = `
+You are a helpful assistant that can write a release note or change log from a git commit message.
+
+The release note or change log should be written in markdown format.
+
+The release note or change log should be written in the following format:
+
+# Release Note or Change Log
+
+## Summary
+
+## Details
+
+## Notes
+`;
