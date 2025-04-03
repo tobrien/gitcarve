@@ -10,11 +10,12 @@ export class ExitError extends Error {
     }
 }
 
-export async function gatherChange(runConfig: Run.Config, logger: Logger): Promise<string> {
+export async function gatherLog(runConfig: Run.Config, logger: Logger): Promise<string> {
     try {
-        logger.info('Gathering change information from Git');
+        logger.verbose('Gathering change information from Git');
 
         try {
+            logger.debug('Executing git log');
             const { stdout, stderr } = await run('git log');
             if (stderr) {
                 logger.warn('Git log produced stderr: %s', stderr);
@@ -33,9 +34,10 @@ export async function gatherChange(runConfig: Run.Config, logger: Logger): Promi
 
 export async function gatherDiff(runConfig: Run.Config, logger: Logger): Promise<string> {
     try {
-        logger.info('Gathering change information from Git');
+        logger.verbose('Gathering change information from Git');
 
         try {
+            logger.debug('Executing git diff');
             const { stdout, stderr } = await run('git diff -- . \': (exclude)dist\' \': (exclude)node_modules\' \': (exclude).env\'');
             if (stderr) {
                 logger.warn('Git log produced stderr: %s', stderr);
@@ -52,36 +54,18 @@ export async function gatherDiff(runConfig: Run.Config, logger: Logger): Promise
     }
 }
 
-export async function gatherContext(runConfig: Run.Config, logger: Logger): Promise<string> {
+export async function createSummary(instructions: string, content: string, runConfig: Run.Config, logger: Logger): Promise<string> {
     try {
-        logger.info('Gathering context information from Git');
-
-        return `Summarize this git log to create something that understands what has been changed here.
-Format the output as markdown.
-The content will contain the output of git log and git diff.
-Summarize the log messages, but also try to dive into the details of the diff to uncover other changes that might not be properly logged.`;
-    } catch (error: any) {
-        logger.error('Error occurred during gather context phase: %s %s', error.message, error.stack);
-        throw new ExitError('Error occurred during gather context phase');
-    }
-}
-
-export async function createSummary(change: string, context: string, diff: string, runConfig: Run.Config, logger: Logger): Promise<string> {
-    try {
-        logger.info('Creating summary');
+        logger.verbose('Creating summary');
 
         const prompt = `
-        <context>
-        ${context}
-        </context>
-        <change>
-        ${change}
-        </change>
-        <diff>
-        ${diff}
-        </diff>
+        <instructions>
+        ${instructions}
+        </instructions>
+        ${content}
         `
 
+        logger.debug('Sending Prompt: %s', prompt);
         const summary = await createCompletion(prompt, logger);
         return summary;
     } catch (error: any) {
@@ -89,22 +73,3 @@ export async function createSummary(change: string, context: string, diff: strin
         throw new ExitError('Error occurred during create summary phase');
     }
 }
-
-// export async function configure(options: ArgumentsInput, logger: Logger): Promise<{ runConfig: Run.Config; }> {
-//     let runConfig: Run.Config;
-//     try {
-//         [runConfig] = await Arguments.generateConfig(options);
-//         logger.info('\n\n\tRun Configuration: %s', JSON.stringify(runConfig, null, 2).replace(/\n/g, '\n\t') + '\n\n');
-//     } catch (error: any) {
-//         if (error instanceof ArgumentError) {
-//             const argumentError = error as ArgumentError;
-//             logger.error('There was an error with a command line argument');
-//             logger.error('\tcommand line argument: %s', argumentError.argument);
-//             logger.error('\tmessage: %s', argumentError.message);
-//         } else {
-//             logger.error('A general error occurred during configuration phase: %s %s', error.message, error.stack);
-//         }
-//         throw new ExitError('Error occurred during configuration phase');
-//     }
-//     return { runConfig };
-// }

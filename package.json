@@ -9,7 +9,7 @@
     },
     "scripts": {
         "build": "vite build",
-        "start": "node dist/main.js",
+        "start": "dist/main.js",
         "dev": "vite",
         "watch": "vite build --watch",
         "test": "NODE_OPTIONS=--experimental-vm-modules jest",

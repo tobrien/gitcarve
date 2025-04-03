@@ -25,7 +25,7 @@ export default defineConfig({
     },
     plugins: [
         ...VitePluginNode({
-            adapter: 'node',
+            adapter: 'express',
             appPath: './src/main.ts',
             exportName: 'viteNodeApp',
             tsCompiler: 'swc',
@@ -57,7 +57,7 @@ export default defineConfig({
             },
             plugins: [
                 shebang({
-                    header: '#!/usr/bin/env node',
+                    shebang: '#!/usr/bin/env node',
                 }),
             ],
         },

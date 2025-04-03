@@ -1,5 +1,5 @@
 import { jest } from '@jest/globals';
-import { Command } from 'commander';
+import { DEFAULT_INSTRUCTIONS, DEFAULT_MODEL } from '../src/constants.js';
 
 // Import modules asynchronously using dynamic imports to support ESM
 let mockRun: any;
@@ -56,22 +56,28 @@ describe('arguments', () => {
 
 
     describe('configure', () => {
-        it('should configure program with all options', () => {
-            const [config] = configure();
+        it('should configure program with all options', async () => {
+            const [config] = await configure();
             expect(config).toBeDefined();
             expect(config.dryRun).toBe(false);
             expect(config.verbose).toBe(false);
+            expect(config.debug).toBe(false);
             expect(config.diff).toBe(true);
             expect(config.log).toBe(false);
+            expect(config.instructions).toBe(DEFAULT_INSTRUCTIONS);
+            expect(config.model).toBe(DEFAULT_MODEL);
         });
 
-        it('should configure program with all options', () => {
-            const [config] = configure();
+        it('should configure program with all options', async () => {
+            const [config] = await configure();
             expect(config).toBeDefined();
             expect(config.dryRun).toBe(false);
             expect(config.verbose).toBe(false);
+            expect(config.debug).toBe(false);
             expect(config.diff).toBe(true);
             expect(config.log).toBe(false);
+            expect(config.instructions).toBe(DEFAULT_INSTRUCTIONS);
+            expect(config.model).toBe(DEFAULT_MODEL);
         });
     });
 });  
