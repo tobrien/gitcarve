@@ -1,8 +1,20 @@
 import { jest } from '@jest/globals';
-import * as fs from 'fs';
 
 // Mock the fs module
-const mockStat = jest.fn<() => Promise<fs.Stats>>();
+var fs: {
+    promises: {
+        stat: jest.Mock<() => Promise<any>>,
+        access: jest.Mock<() => Promise<void>>,
+        mkdir: jest.Mock<() => Promise<void>>,
+        readFile: jest.Mock<() => Promise<string>>,
+        writeFile: jest.Mock<() => Promise<void>>
+    },
+    constants: {
+        R_OK: number,
+        W_OK: number
+    }
+};
+const mockStat = jest.fn<() => Promise<any>>();
 const mockAccess = jest.fn<() => Promise<void>>();
 const mockMkdir = jest.fn<() => Promise<void>>();
 const mockReadFile = jest.fn<() => Promise<string>>();
@@ -32,6 +44,7 @@ describe('Storage Utility', () => {
     let storage: any;
 
     beforeAll(async () => {
+        var fs = await import('fs');
         storageModule = await import('../../src/util/storage.js');
     });
 
@@ -42,7 +55,7 @@ describe('Storage Utility', () => {
 
     describe('exists', () => {
         it('should return true if path exists', async () => {
-            mockStat.mockResolvedValueOnce({ isDirectory: () => false, isFile: () => false } as fs.Stats);
+            mockStat.mockResolvedValueOnce({ isDirectory: () => false, isFile: () => false });
 
             const result = await storage.exists('/test/path');
 
@@ -65,7 +78,7 @@ describe('Storage Utility', () => {
             mockStat.mockResolvedValueOnce({
                 isDirectory: () => true,
                 isFile: () => false
-            } as fs.Stats);
+            });
 
             const result = await storage.isDirectory('/test/dir');
 
@@ -78,7 +91,7 @@ describe('Storage Utility', () => {
             mockStat.mockResolvedValueOnce({
                 isDirectory: () => false,
                 isFile: () => true
-            } as fs.Stats);
+            });
 
             const result = await storage.isDirectory('/test/file');
 
@@ -93,7 +106,7 @@ describe('Storage Utility', () => {
             mockStat.mockResolvedValueOnce({
                 isFile: () => true,
                 isDirectory: () => false
-            } as fs.Stats);
+            });
 
             const result = await storage.isFile('/test/file.txt');
 
@@ -106,7 +119,7 @@ describe('Storage Utility', () => {
             mockStat.mockResolvedValueOnce({
                 isFile: () => false,
                 isDirectory: () => true
-            } as fs.Stats);
+            });
 
             const result = await storage.isFile('/test/dir');
 
@@ -169,11 +182,11 @@ describe('Storage Utility', () => {
     describe('isFileReadable', () => {
         it('should return true if path exists, is a file, and is readable', async () => {
             // Setup mocks for the chain of function calls
-            mockStat.mockResolvedValueOnce({ isFile: () => false, isDirectory: () => false } as fs.Stats); // exists
+            mockStat.mockResolvedValueOnce({ isFile: () => false, isDirectory: () => false }); // exists
             mockStat.mockResolvedValueOnce({  // isFile
                 isFile: () => true,
                 isDirectory: () => false
-            } as fs.Stats);
+            });
             mockAccess.mockResolvedValueOnce(undefined); // isReadable
 
             const result = await storage.isFileReadable('/test/file.txt');
@@ -190,11 +203,11 @@ describe('Storage Utility', () => {
         });
 
         it('should return false if path is not a file', async () => {
-            mockStat.mockResolvedValueOnce({ isFile: () => false, isDirectory: () => false } as fs.Stats); // exists
+            mockStat.mockResolvedValueOnce({ isFile: () => false, isDirectory: () => false }); // exists
             mockStat.mockResolvedValueOnce({ // isFile
                 isFile: () => false,
                 isDirectory: () => true
-            } as fs.Stats);
+            });
 
             const result = await storage.isFileReadable('/test/dir');
 
@@ -202,11 +215,11 @@ describe('Storage Utility', () => {
         });
 
         it('should return false if path is not readable', async () => {
-            mockStat.mockResolvedValueOnce({ isFile: () => false, isDirectory: () => false } as fs.Stats); // exists
+            mockStat.mockResolvedValueOnce({ isFile: () => false, isDirectory: () => false }); // exists
             mockStat.mockResolvedValueOnce({ // isFile
                 isFile: () => true,
                 isDirectory: () => false
-            } as fs.Stats);
+            });
             mockAccess.mockRejectedValueOnce(new Error('Not readable')); // isReadable
 
             const result = await storage.isFileReadable('/test/file.txt');
@@ -218,11 +231,11 @@ describe('Storage Utility', () => {
     describe('isDirectoryWritable', () => {
         it('should return true if path exists, is a directory, and is writable', async () => {
             // Setup mocks for the chain of function calls
-            mockStat.mockResolvedValueOnce({ isFile: () => false, isDirectory: () => false } as fs.Stats); // exists
+            mockStat.mockResolvedValueOnce({ isFile: () => false, isDirectory: () => false }); // exists
             mockStat.mockResolvedValueOnce({ // isDirectory
                 isDirectory: () => true,
                 isFile: () => false
-            } as fs.Stats);
+            });
             mockAccess.mockResolvedValueOnce(undefined); // isWritable
 
             const result = await storage.isDirectoryWritable('/test/dir');
@@ -239,11 +252,11 @@ describe('Storage Utility', () => {
         });
 
         it('should return false if path is not a directory', async () => {
-            mockStat.mockResolvedValueOnce({ isFile: () => false, isDirectory: () => false } as fs.Stats); // exists
+            mockStat.mockResolvedValueOnce({ isFile: () => false, isDirectory: () => false }); // exists
             mockStat.mockResolvedValueOnce({ // isDirectory
                 isDirectory: () => false,
                 isFile: () => true
-            } as fs.Stats);
+            });
 
             const result = await storage.isDirectoryWritable('/test/file.txt');
 
@@ -251,11 +264,11 @@ describe('Storage Utility', () => {
         });
 
         it('should return false if path is not writable', async () => {
-            mockStat.mockResolvedValueOnce({ isFile: () => false, isDirectory: () => false } as fs.Stats); // exists
+            mockStat.mockResolvedValueOnce({ isFile: () => false, isDirectory: () => false }); // exists
             mockStat.mockResolvedValueOnce({ // isDirectory
                 isDirectory: () => true,
                 isFile: () => false
-            } as fs.Stats);
+            });
             mockAccess.mockRejectedValueOnce(new Error('Not writable')); // isWritable
 
             const result = await storage.isDirectoryWritable('/test/dir');
@@ -323,7 +336,7 @@ describe('Storage Utility', () => {
                 mockStat.mockResolvedValueOnce({
                     isDirectory: () => false,
                     isFile: () => true
-                } as fs.Stats);
+                });
 
                 await utilWithDefaultLogger.isDirectory('/test/file');
 
