@@ -6,7 +6,6 @@ import * as Release from './commands/release';
 import { COMMAND_COMMIT, COMMAND_RELEASE } from './constants';
 import { getLogger, setLogLevel } from './logging';
 import * as Run from './run';
-import { ExitError } from './error/ExitError';
 
 export async function main() {
     const [runConfig]: [Run.Config] = await Arguments.configure();

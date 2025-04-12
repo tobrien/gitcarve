@@ -16,36 +16,21 @@ export const execute = async (runConfig: Run.Config) => {
 
     const contentSections: Section<Content>[] = [];
 
-    const logContent = '';
     let diffContent = '';
 
-    // if (runConfig.contentTypes.includes('log')) {
-    //     const log = await Log.create();
-    //     logContent = await log.get();
-    // }
-
-    if (runConfig.contentTypes.includes('diff')) {
-        let cached = runConfig.cached;
-        // If cached is undefined? We're going to look for a staged commit; otherwise, we'll use the supplied setting.
-        if (runConfig.cached === undefined) {
-            cached = await Diff.hasStagedChanges();
-        }
-        const options = { cached };
-        const diff = await Diff.create(options);
-        diffContent = await diff.get();
+    let cached = runConfig.cached;
+    // If cached is undefined? We're going to look for a staged commit; otherwise, we'll use the supplied setting.
+    if (runConfig.cached === undefined) {
+        cached = await Diff.hasStagedChanges();
     }
+    const options = { cached };
+    const diff = await Diff.create(options);
+    diffContent = await diff.get();
 
-    if (logContent) {
-        const logSection = createSection<Content>('log');
-        logSection.add(logContent);
-        contentSections.push(logSection);
-    }
+    const diffSection = createSection<Content>('diff');
+    diffSection.add(diffContent);
+    contentSections.push(diffSection);
 
-    if (diffContent) {
-        const diffSection = createSection<Content>('diff');
-        diffSection.add(diffContent);
-        contentSections.push(diffSection);
-    }
 
     const prompt = await prompts.createCommitPrompt(contentSections);
 

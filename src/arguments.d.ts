@@ -6,10 +6,12 @@ export interface Input {
     overrides?: boolean;
     openaiApiKey?: string;
     model?: string;
-    contentTypes?: string[];
     contextDirectories?: string[];
     instructions?: string;
     configDir?: string;
     cached?: boolean;
     sendit?: boolean;
+    fromCommitAlias: string;
+    toCommitAlias: string;
+    version?: string;
 }

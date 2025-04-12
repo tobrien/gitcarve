@@ -37,10 +37,13 @@ describe('log', () => {
         const mockLog = 'mock log content';
         run.run.mockResolvedValue({ stdout: mockLog, stderr: '' });
 
-        const log = await Log.create();
+        const log = await Log.create({
+            fromCommitAlias: 'fromCommitAlias',
+            toCommitAlias: 'toCommitAlias'
+        });
         const result = await log.get();
 
-        expect(run.run).toHaveBeenCalledWith('git log');
+        expect(run.run).toHaveBeenCalledWith('git log fromCommitAlias..toCommitAlias');
         expect(result).toBe(mockLog);
     });
 
@@ -49,10 +52,10 @@ describe('log', () => {
         const mockStderr = 'warning message';
         run.run.mockResolvedValue({ stdout: mockLog, stderr: mockStderr });
 
-        const log = await Log.create();
+        const log = await Log.create({ fromCommitAlias: 'fromCommitAlias', toCommitAlias: 'toCommitAlias' });
         const result = await log.get();
 
-        expect(run.run).toHaveBeenCalledWith('git log');
+        expect(run.run).toHaveBeenCalledWith('git log fromCommitAlias..toCommitAlias');
         expect(result).toBe(mockLog);
         expect(getLogger.getLogger().warn).toHaveBeenCalledWith('Git log produced stderr: %s', mockStderr);
     });
@@ -61,7 +64,7 @@ describe('log', () => {
         const mockError = new Error('git log failed');
         run.run.mockRejectedValue(mockError);
 
-        const log = await Log.create();
+        const log = await Log.create({ fromCommitAlias: 'fromCommitAlias', toCommitAlias: 'toCommitAlias' });
 
         await expect(log.get()).rejects.toThrow(ExitError);
         expect(getLogger.getLogger().error).toHaveBeenCalledWith('Failed to execute git log: %s', mockError.message);
@@ -71,7 +74,10 @@ describe('log', () => {
         const mockError = new Error('general error');
         run.run.mockRejectedValue(mockError);
 
-        const log = await Log.create();
+        const log = await Log.create({
+            fromCommitAlias: 'fromCommitAlias',
+            toCommitAlias: 'toCommitAlias'
+        });
 
         await expect(log.get()).rejects.toThrow(ExitError);
         expect(getLogger.getLogger().error).toHaveBeenCalledWith(

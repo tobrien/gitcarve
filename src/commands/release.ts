@@ -2,7 +2,6 @@
 import { Content, createSection, Section } from '@tobrien/minorprompt';
 import 'dotenv/config';
 import { createCompletion } from '../util/openai';
-import * as Diff from '../content/diff';
 import * as Log from '../content/log';
 import * as Prompts from '../prompt/prompts';
 import * as Run from '../run';
@@ -14,30 +13,15 @@ export const execute = async (runConfig: Run.Config) => {
 
     const contentSections: Section<Content>[] = [];
 
-    const log = await Log.create();
-    const diff = await Diff.create({ cached: runConfig.cached });
+    const log = await Log.create({ fromCommitAlias: runConfig.fromCommitAlias, toCommitAlias: runConfig.toCommitAlias });
     let logContent = '';
-    let diffContent = '';
 
-    if (runConfig.contentTypes.includes('log')) {
-        logContent = await log.get();
-    }
-
-    if (runConfig.contentTypes.includes('diff')) {
-        diffContent = await diff.get();
-    }
-
+    logContent = await log.get();
 
     if (logContent) {
         const logSection = createSection<Content>('log');
         logSection.add(logContent);
         contentSections.push(logSection);
-    }
-
-    if (diffContent) {
-        const diffSection = createSection<Content>('diff');
-        diffSection.add(diffContent);
-        contentSections.push(diffSection);
     }
 
     const prompt = await prompts.createReleasePrompt(contentSections);

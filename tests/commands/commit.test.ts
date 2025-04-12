@@ -64,7 +64,7 @@ describe('commit command', () => {
             contentTypes: ['diff']
         };
 
-        const result = await Commit.run(runConfig);
+        const result = await Commit.execute(runConfig);
 
         expect(Diff.create).toHaveBeenCalled();
         expect(Log.create).not.toHaveBeenCalled();
@@ -79,7 +79,7 @@ describe('commit command', () => {
             contentTypes: ['diff', 'log']
         };
 
-        const result = await Commit.run(runConfig);
+        const result = await Commit.execute(runConfig);
 
         expect(Diff.create).toHaveBeenCalled();
         expect(Prompts.create).toHaveBeenCalledWith(runConfig.model, runConfig);
@@ -87,18 +87,4 @@ describe('commit command', () => {
         expect(result).toBe('mock summary');
     });
 
-    it('should handle empty content types', async () => {
-        const runConfig = {
-            model: 'gpt-4',
-            contentTypes: []
-        };
-
-        const result = await Commit.run(runConfig);
-
-        expect(Diff.create).not.toHaveBeenCalled();
-        expect(Log.create).not.toHaveBeenCalled();
-        expect(Prompts.create).toHaveBeenCalledWith(runConfig.model, runConfig);
-        expect(createCompletion.createCompletion).toHaveBeenCalled();
-        expect(result).toBe('mock summary');
-    });
 });

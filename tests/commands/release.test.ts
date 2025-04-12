@@ -56,20 +56,6 @@ describe('release command', () => {
         jest.clearAllMocks();
     });
 
-    it('should run release command with diff content', async () => {
-        const runConfig = {
-            model: 'gpt-4',
-            contentTypes: ['diff']
-        };
-
-        const result = await Release.run(runConfig);
-
-        expect(Diff.create).toHaveBeenCalled();
-        expect(Log.create).toHaveBeenCalled();
-        expect(Prompts.create).toHaveBeenCalledWith(runConfig.model, runConfig);
-        expect(createCompletion.createCompletion).toHaveBeenCalled();
-        expect(result).toBe('mock summary');
-    });
 
     it('should run release command with log content', async () => {
         const runConfig = {
@@ -77,42 +63,12 @@ describe('release command', () => {
             contentTypes: ['log']
         };
 
-        const result = await Release.run(runConfig);
+        const result = await Release.execute(runConfig);
 
-        expect(Log.create).toHaveBeenCalled();
-        expect(Diff.create).toHaveBeenCalled();
-        expect(Prompts.create).toHaveBeenCalledWith(runConfig.model, runConfig);
-        expect(createCompletion.createCompletion).toHaveBeenCalled();
-        expect(result).toBe('mock summary');
-    });
-
-    it('should run release command with both diff and log content', async () => {
-        const runConfig = {
-            model: 'gpt-4',
-            contentTypes: ['diff', 'log']
-        };
-
-        const result = await Release.run(runConfig);
-
-        expect(Diff.create).toHaveBeenCalled();
         expect(Log.create).toHaveBeenCalled();
         expect(Prompts.create).toHaveBeenCalledWith(runConfig.model, runConfig);
         expect(createCompletion.createCompletion).toHaveBeenCalled();
         expect(result).toBe('mock summary');
     });
 
-    it('should handle empty content types', async () => {
-        const runConfig = {
-            model: 'gpt-4',
-            contentTypes: []
-        };
-
-        const result = await Release.run(runConfig);
-
-        expect(Diff.create).toHaveBeenCalled();
-        expect(Log.create).toHaveBeenCalled();
-        expect(Prompts.create).toHaveBeenCalledWith(runConfig.model, runConfig);
-        expect(createCompletion.createCompletion).toHaveBeenCalled();
-        expect(result).toBe('mock summary');
-    });
 });

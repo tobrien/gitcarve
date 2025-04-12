@@ -23,15 +23,12 @@ export const DEFAULT_VERBOSE = false;
 export const DEFAULT_DRY_RUN = false;
 export const DEFAULT_DEBUG = false;
 export const DEFAULT_MODEL = 'gpt-4o-mini';
-export const DEFAULT_CONTENT_TYPES = ['diff'];
 export const DEFAULT_CONTEXT_DIRECTORIES: string[] = [];
 
 export const COMMAND_COMMIT = 'commit';
 export const COMMAND_RELEASE = 'release';
 export const ALLOWED_COMMANDS = [COMMAND_COMMIT, COMMAND_RELEASE];
 export const DEFAULT_COMMAND = COMMAND_COMMIT;
-
-export const ALLOWED_CONTENT_TYPES = ['log', 'diff'];
 
 export const DEFAULT_CONFIG_DIR = `.${PROGRAM_NAME}`;
 
@@ -48,3 +45,7 @@ export const DEFAULT_INSTRUCTIONS_RELEASE_FILE = `${DEFAULT_INSTRUCTIONS_DIR}/re
 export const DEFAULT_CACHED = false;
 
 export const DEFAULT_SENDIT_MODE = false;
+
+export const DEFAULT_FROM_COMMIT_ALIAS = 'main';
+export const DEFAULT_TO_COMMIT_ALIAS = 'HEAD';
+export const DEFAULT_VERSION = '1.0.0';

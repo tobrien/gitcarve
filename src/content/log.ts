@@ -7,7 +7,7 @@ export interface Instance {
     get(): Promise<string>;
 }
 
-export const create = async (): Promise<Instance> => {
+export const create = async (options: { fromCommitAlias: string, toCommitAlias: string }): Promise<Instance> => {
     const logger = getLogger();
 
     async function get(): Promise<string> {
@@ -16,7 +16,7 @@ export const create = async (): Promise<Instance> => {
 
             try {
                 logger.debug('Executing git log');
-                const { stdout, stderr } = await run('git log');
+                const { stdout, stderr } = await run(`git log ${options.fromCommitAlias}..${options.toCommitAlias}`);
                 if (stderr) {
                     logger.warn('Git log produced stderr: %s', stderr);
                 }

@@ -1,5 +1,5 @@
 import { jest } from '@jest/globals';
-import { DEFAULT_CONFIG_DIR, DEFAULT_CONTENT_TYPES, DEFAULT_CONTEXT_DIRECTORIES, DEFAULT_INSTRUCTIONS_DIR, DEFAULT_MODEL } from '../src/constants.js';
+import { DEFAULT_CONFIG_DIR, DEFAULT_CONTEXT_DIRECTORIES, DEFAULT_INSTRUCTIONS_DIR, DEFAULT_MODEL } from '../src/constants.js';
 
 // Mock dependencies
 // @ts-ignore
@@ -13,7 +13,6 @@ jest.mock('../src/run.js', () => ({
         instructions: DEFAULT_INSTRUCTIONS_DIR,
         model: DEFAULT_MODEL,
         configDir: DEFAULT_CONFIG_DIR,
-        contentTypes: DEFAULT_CONTENT_TYPES,
         contextDirectories: DEFAULT_CONTEXT_DIRECTORIES,
         commandName: 'commit'
     }))
@@ -100,7 +99,6 @@ describe('arguments', () => {
             expect(config.instructions).toBe(DEFAULT_INSTRUCTIONS_DIR);
             expect(config.model).toBe(DEFAULT_MODEL);
             expect(config.configDir).toContain(DEFAULT_CONFIG_DIR);
-            expect(config.contentTypes).toEqual(DEFAULT_CONTENT_TYPES);
             expect(config.contextDirectories).toEqual(DEFAULT_CONTEXT_DIRECTORIES);
         });
     });

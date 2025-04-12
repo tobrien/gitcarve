@@ -1,11 +1,10 @@
-import { Command, program } from "commander";
+import { Command } from "commander";
 import path from "path";
 import { Input } from "./arguments.d";
-import { ALLOWED_COMMANDS, ALLOWED_CONTENT_TYPES, DEFAULT_CHARACTER_ENCODING, DEFAULT_COMMAND, DEFAULT_CONFIG_DIR, DEFAULT_CONTENT_TYPES, DEFAULT_CONTEXT_DIRECTORIES, DEFAULT_DEBUG, DEFAULT_DRY_RUN, DEFAULT_INSTRUCTIONS_DIR, DEFAULT_MODEL, DEFAULT_OVERRIDES, DEFAULT_SENDIT_MODE, DEFAULT_VERBOSE, PROGRAM_NAME, VERSION } from "./constants";
+import { ALLOWED_COMMANDS, DEFAULT_CHARACTER_ENCODING, DEFAULT_COMMAND, DEFAULT_CONFIG_DIR, DEFAULT_CONTEXT_DIRECTORIES, DEFAULT_DEBUG, DEFAULT_DRY_RUN, DEFAULT_FROM_COMMIT_ALIAS, DEFAULT_INSTRUCTIONS_DIR, DEFAULT_MODEL, DEFAULT_OVERRIDES, DEFAULT_SENDIT_MODE, DEFAULT_TO_COMMIT_ALIAS, DEFAULT_VERBOSE, PROGRAM_NAME, VERSION } from "./constants";
 import { getLogger } from "./logging";
 import * as Run from "./run";
 import * as Storage from "./util/storage";
-import { stringifyJSON } from "./util/general";
 
 export const configure = async (): Promise<[Run.Config]> => {
     const program = new Command();
@@ -25,7 +24,6 @@ export const configure = async (): Promise<[Run.Config]> => {
             .option('--overrides', 'enable overrides', DEFAULT_OVERRIDES)
             .option('--openai-api-key <key>', 'OpenAI API key', process.env.OPENAI_API_KEY)
             .option('--model <model>', 'OpenAI model to use', DEFAULT_MODEL)
-            .option('-c, --content-types [contentTypes...]', 'content types to include in the summary', DEFAULT_CONTENT_TYPES)
             .option('-d, --context-directories [contextDirectories...]', 'directories to scan for context', DEFAULT_CONTEXT_DIRECTORIES)
             .option('-i, --instructions <file>', 'instructions for the AI', DEFAULT_INSTRUCTIONS_DIR)
             .option('--config-dir <configDir>', 'configuration directory', DEFAULT_CONFIG_DIR);
@@ -41,6 +39,9 @@ export const configure = async (): Promise<[Run.Config]> => {
 
     const releaseCommand = program
         .command('release')
+        .option('--from <fromCommitAlias>', 'branch to generate release notes from', DEFAULT_FROM_COMMIT_ALIAS)
+        .option('--to <toCommitAlias>', 'branch to generate release notes to', DEFAULT_TO_COMMIT_ALIAS)
+        .option('--version <version>', 'version to generate release notes for')
         .description('Generate release notes');
     addSharedOptions(releaseCommand);
 
@@ -80,7 +81,6 @@ async function validateOptions(options: Input): Promise<{
     verbose: boolean;
     debug: boolean;
     overrides: boolean;
-    contentTypes: string[];
     model: string;
     instructions: string;
     contextDirectories: string[];
@@ -88,12 +88,14 @@ async function validateOptions(options: Input): Promise<{
     configDir: string;
     cached?: boolean;
     sendit: boolean;
+    fromCommitAlias: string;
+    toCommitAlias: string;
+    version?: string;
 }> {
     if (!options.openaiApiKey) {
         throw new Error('OpenAI API key is required, set OPENAI_API_KEY environment variable');
     }
 
-    const contentTypes = options.contentTypes ? validateContentTypes(options.contentTypes) : DEFAULT_CONTENT_TYPES;
     const contextDirectories = await validateContextDirectories(options.contextDirectories || DEFAULT_CONTEXT_DIRECTORIES);
     const instructions: string | null = options.instructions ? await validateInstructions(options.instructions) : null;
     const commandName = validateCommand(options.commandName);
@@ -104,7 +106,6 @@ async function validateOptions(options: Input): Promise<{
         verbose: options.verbose ?? DEFAULT_VERBOSE,
         debug: options.debug ?? DEFAULT_DEBUG,
         overrides: options.overrides ?? DEFAULT_OVERRIDES,
-        contentTypes: contentTypes ?? DEFAULT_CONTENT_TYPES,
         model: options.model ?? DEFAULT_MODEL,
         instructions: instructions ?? DEFAULT_INSTRUCTIONS_DIR,
         contextDirectories,
@@ -112,6 +113,9 @@ async function validateOptions(options: Input): Promise<{
         configDir,
         cached: options.cached,
         sendit: options.sendit ?? DEFAULT_SENDIT_MODE,
+        fromCommitAlias: options.fromCommitAlias ?? DEFAULT_FROM_COMMIT_ALIAS,
+        toCommitAlias: options.toCommitAlias ?? DEFAULT_TO_COMMIT_ALIAS,
+        version: options.version,
     };
 }
 
@@ -120,13 +124,6 @@ function validateCommand(commandName: string): string {
         throw new Error(`Invalid command: ${commandName}, allowed commands: ${ALLOWED_COMMANDS.join(', ')}`);
     }
     return commandName;
-}
-
-function validateContentTypes(contentTypes: string[]) {
-    if (contentTypes.some(contentType => !ALLOWED_CONTENT_TYPES.includes(contentType))) {
-        throw new Error(`Invalid content type: ${contentTypes.join(', ')}, allowed content types: ${ALLOWED_CONTENT_TYPES.join(', ')}`);
-    }
-    return contentTypes;
 }
 
 async function validateConfigDir(configDir: string): Promise<string> {
