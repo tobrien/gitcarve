@@ -22,5 +22,5 @@ jobs:
       - run: pnpm test --coverage
       - uses: codecov/codecov-action@v5
         with:
-          slug: tobrien/gitchange
+          slug: tobrien/gitcarve
           token: ${{ secrets.CODECOV_TOKEN }}
