@@ -116,7 +116,7 @@ describe('prompts', () => {
 
     it('should generate override content with pre and post files', async () => {
         const storage = Storage.create();
-        storage.exists.mockResolvedValue(true);
+        storage.exists.mockImplementation((path: string) => Promise.resolve(!path.includes('_')));
         storage.readFile.mockResolvedValue('custom content');
 
         const factory = Prompts.create('gpt-4', { configDir: '/test/config', overrides: true });
@@ -131,7 +131,7 @@ describe('prompts', () => {
 
     it('should handle override content with overrides enabled', async () => {
         const storage = Storage.create();
-        storage.exists.mockResolvedValue(true);
+        storage.exists.mockImplementation((path: string) => Promise.resolve(!path.includes('_')));
         storage.readFile.mockResolvedValue('custom content');
 
         const factory = Prompts.create('gpt-4', {
@@ -149,7 +149,7 @@ describe('prompts', () => {
 
     it('should throw error when override content found but overrides disabled', async () => {
         const storage = Storage.create();
-        storage.exists.mockResolvedValue(true);
+        storage.exists.mockImplementation((path: string) => Promise.resolve(!path.includes('_')));
         storage.readFile.mockResolvedValue('custom content');
 
         const factory = Prompts.create('gpt-4', { configDir: '/test/config' });
@@ -160,7 +160,7 @@ describe('prompts', () => {
 
     it('should customize content with prepend and append', async () => {
         const storage = Storage.create();
-        storage.exists.mockResolvedValue(true);
+        storage.exists.mockImplementation((path: string) => Promise.resolve(!path.includes('_')));
         storage.readFile.mockResolvedValue('custom content');
 
         const factory = Prompts.create('gpt-4', { configDir: '/test/config', overrides: true });
