@@ -1,10 +1,10 @@
-# Git Intelligent Change
+# Git Carve
 
-Git Intelligent Change is a powerful utility designed to automatically generate intelligent change logs and insights from your Git repository. It analyzes commit history, pull requests, and related metadata to create comprehensive, well-structured documentation of your project's evolution. By leveraging advanced parsing and analysis techniques, it helps teams maintain clear visibility into their codebase's development history while reducing the manual effort typically required for changelog maintenance.
+Git Carve is a powerful utility designed to automatically generate intelligent release notes and change logs from your Git repository. It analyzes commit history, pull requests, and related metadata to create comprehensive, well-structured documentation of your project's evolution. By leveraging advanced parsing and analysis techniques, it helps teams maintain clear visibility into their codebase's development history while reducing the manual effort typically required for changelog maintenance.
 
 ## Installation
 
-Install Git Intelligent Change globally using npm:
+Install Git Carve globally using npm:
 
 ```bash
 npm install -g @tobrien/gitcarve
@@ -14,7 +14,7 @@ This will make the `gitcarve` command available globally on your system.
 
 ## Commands
 
-Git Intelligent Change provides two main commands:
+Git Carve provides two main commands:
 
 ### Commit Command
 
@@ -53,10 +53,9 @@ gitcarve release
 > 
 > You can use the `--from` and `--to` options to generate release notes comparing two different releases. For example, to see what changed between v1.0.0 and v1.1.0, you could use `gitcarve release --from v1.0.0 --to v1.1.0`. This is particularly useful for creating detailed changelogs when preparing release documentation.
 
-
 ## Command Line Options
 
-Git Intelligent Change provides several command line options to customize its behavior:
+Git Carve provides several command line options to customize its behavior:
 
 ### Basic Options
 
@@ -126,7 +125,7 @@ gitcarve release --instructions ./my-custom-instructions.md
 
 ### Configuration Directory
 
-Git Intelligent Change uses a configuration directory to store custom settings, instructions, and other configuration files. You can specify a custom location using the `--config-dir` option:
+Git Carve uses a configuration directory to store custom settings, instructions, and other configuration files. You can specify a custom location using the `--config-dir` option:
 
 ```bash
 gitcarve --config-dir ~/custom-gitcarve-config
@@ -150,7 +149,7 @@ The configuration directory structure is as follows:
 
 ## Default Instructions
 
-Git Intelligent Change comes with default instructions that guide the AI in generating release notes or change logs. These instructions are defined in the source code:
+Git Carve comes with default instructions that guide the AI in generating release notes or change logs. These instructions are defined in the source code:
 
 - **Commit Instructions**: The default instructions for commit message generation are defined in [src/prompt/instructions/commit.ts](https://github.com/tobrien/gitcarve/blob/main/src/prompt/instructions/commit.ts).
 
@@ -173,7 +172,7 @@ You can override these default instructions in several ways:
 
 ## Prompt Structure
 
-When Git Intelligent Change sends a request to the LLM, it structures the prompt using XML-like tags to organize different components of the input. The prompt is composed of three main sections:
+When Git Carve sends a request to the LLM, it structures the prompt using XML-like tags to organize different components of the input. The prompt is composed of three main sections:
 
 ```
 <instructions>
@@ -196,7 +195,7 @@ Each section serves a specific purpose:
 
 ## Context
 
-Git Intelligent Change can use contextual information about your project to generate more meaningful commit messages and release notes. Context is provided through Markdown files stored in a dedicated directory.
+Git Carve can use contextual information about your project to generate more meaningful commit messages and release notes. Context is provided through Markdown files stored in a dedicated directory.
 
 ### Context Directory Structure
 
@@ -276,7 +275,7 @@ To specify a custom context directory, use the `--context-dir` option:
 gitcarve commit --context-dir ~/my-custom-context
 ```
 
-By default, Git Intelligent Change looks for context in the `.gitcarve/context` directory within your project.
+By default, Git Carve looks for context in the `.gitcarve/context` directory within your project.
 
 ## Configuration Directory
 
@@ -306,8 +305,28 @@ By replacing these instructions entirely, you may lose these benefits and potent
 
 To enable instruction overrides, you'll need to use the `--overrides` flag when running the command.
 
+## About the Name
 
+Ski carving and efficient software development have a lot in common. Carving uses edge control to follow a smooth, energy-efficient arc — just like automation uses clean, repeatable scripts to replace manual work. Both are about flow: linking turns or commits without hesitation. As carving unlocks speed and control, automation unlocks scalability and momentum. The result is clean tracks — razor-thin arcs on snow, or tidy diffs in code. And when you’ve mastered your craft, you don’t stop to think about your last move. Your code leaves a clean trail — and your commit message can be automated straight from the diff.  And — snowboarders carve too. Different board, same beauty. We won’t hold it against you if you’re dropping clean edges on a single plank.
 
+## Origin Story: gitcarve
+
+It always happened at the same moment.
+
+You’ve just spent the entire day in a flow state — the kind that only comes when everything clicks. Whether it was writing code for a critical feature or hammering out chapters of a Markdown or AsciiDoc book, you were locked in. Maybe you were racing the clock to hit a deadline. Maybe you were just up late trying to carve something beautiful out of nothing. Either way, you went right up to the wire, focused, dialed in, exhausted but satisfied.
+
+And then… Git hits you with the meta-question:
+“What did you do?”
+
+That one prompt — to sum it all up in a commit message — feels totally out of place. It asks you to stop, zoom out, and articulate everything you’ve just done, right when your brain is at its least reflective. You’re not in summary mode. You’re still in it. Still shaping. Still carving.
+
+And that’s the thing: it sounds silly, like it shouldn’t be a real problem. But every developer, every writer who lives in Git knows that exact moment. The friction is real. The context switch is jarring. It’s like being asked to narrate your entire ski run after you’ve blasted through powder, dodged trees, hit the cliff drop — and now you’re out of breath, standing at the bottom, being asked to give a PowerPoint.
+
+That’s why I built gitcarve.
+
+It’s not just a tool — it’s a mindset shift. The idea is simple: you’ve already carved your line in the snow. Your code is there. Your diffs are real. Instead of making you explain it, gitcarve uses an LLM to read the trail you left behind and generate a clean, meaningful commit message. One that actually reflects your work — without breaking your flow or making you guess what mattered most.
+
+Whether you’re merging branches or writing books, gitcarve is built for that end-of-day moment when you want to commit and move on — not pause for existential reflection. It reads the line you’ve drawn, and it helps you push it forward.
 
 
 
