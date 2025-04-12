@@ -9,6 +9,7 @@ import * as Chat from '@tobrien/minorprompt/chat';
 import { run } from '../util/child';
 import { getLogger } from '../logging';
 import { ChatCompletionMessageParam } from 'openai/resources';
+import shellescape from 'shell-escape';
 
 export const execute = async (runConfig: Run.Config) => {
     const logger = getLogger();
@@ -41,8 +42,8 @@ export const execute = async (runConfig: Run.Config) => {
     if (runConfig.sendit) {
         logger.info('SendIt mode enabled. Committing with message', summary);
         try {
-            const escapedSummary = summary.replace(/"/g, '\\"');
-            await run(`git commit -m "${escapedSummary}"`);
+            const escapedSummary = shellescape([summary]);
+            await run(`git commit -m ${escapedSummary}`);
             logger.info('Commit successful!');
         } catch (error) {
             logger.error('Failed to commit:', error);
