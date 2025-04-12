@@ -30,7 +30,19 @@ export const create = (model: Chat.Model, runConfig: RunConfig): Factory => {
         const preFile = baseFile.replace('.md', '-pre.md');
         const postFile = baseFile.replace('.md', '-post.md');
 
+        logger.debug('Files: baseFile %s, preFile %s, postFile %s', baseFile, preFile, postFile);
+
         const response: { override?: string, prepend?: string, append?: string } = {};
+
+        // Check for underscore file names and throw an error if found
+        const underscorePreFile = baseFile.replace('.md', '_pre.md');
+        const underscorePostFile = baseFile.replace('.md', '_post.md');
+
+        if (await storage.exists(underscorePreFile) || await storage.exists(underscorePostFile)) {
+            logger.error('ERROR: Found files with underscore instead of hyphen. Please use hyphens (-) instead of underscores (_) in file names.');
+            throw new Error('Invalid file naming convention. Use hyphens (-) instead of underscores (_) in file names.');
+        }
+
 
         if (await storage.exists(preFile)) {
             logger.debug('Found pre file %s', preFile);
@@ -108,6 +120,7 @@ export const create = (model: Chat.Model, runConfig: RunConfig): Factory => {
     const customizeContent = async (configDir: string, overrideFile: string, content: string): Promise<string> => {
         const logger = getLogger();
         const { override, prepend, append } = await generateOverrideContent(configDir, overrideFile);
+        logger.debug("Content Customization for %s: override: %s, prepend: %s, append: %s", overrideFile, override, prepend, append);
         let finalTraits = content;
 
         if (override) {

@@ -13,5 +13,4 @@ export interface Input {
     sendit?: boolean;
     fromCommitAlias: string;
     toCommitAlias: string;
-    version?: string;
 }

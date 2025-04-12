@@ -27,7 +27,7 @@ export async function createCompletion(messages: ChatCompletionMessageParam[], o
             apiKey: apiKey,
         });
 
-        logger.silly('Sending prompt to OpenAI: %j', messages);
+        logger.debug('Sending prompt to OpenAI: %j', messages);
 
         const completion = await openai.chat.completions.create({
             model: options.model || "gpt-4o-mini",

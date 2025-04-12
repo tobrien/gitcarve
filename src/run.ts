@@ -14,7 +14,6 @@ export interface Config {
     sendit: boolean;
     fromCommitAlias: string;
     toCommitAlias: string;
-    version?: string;
 }
 
 export const createConfig = (params: {
@@ -31,7 +30,6 @@ export const createConfig = (params: {
     sendit?: boolean;
     fromCommitAlias: string;
     toCommitAlias: string;
-    version?: string;
 }): Config => {
     return {
         dryRun: params.dryRun ?? DEFAULT_DRY_RUN,
@@ -47,6 +45,5 @@ export const createConfig = (params: {
         sendit: params.sendit ?? DEFAULT_SENDIT_MODE,
         fromCommitAlias: params.fromCommitAlias ?? DEFAULT_FROM_COMMIT_ALIAS,
         toCommitAlias: params.toCommitAlias ?? DEFAULT_TO_COMMIT_ALIAS,
-        version: params.version,
     }
 }

@@ -41,7 +41,6 @@ export const configure = async (): Promise<[Run.Config]> => {
         .command('release')
         .option('--from <fromCommitAlias>', 'branch to generate release notes from', DEFAULT_FROM_COMMIT_ALIAS)
         .option('--to <toCommitAlias>', 'branch to generate release notes to', DEFAULT_TO_COMMIT_ALIAS)
-        .option('--version <version>', 'version to generate release notes for')
         .description('Generate release notes');
     addSharedOptions(releaseCommand);
 
@@ -115,7 +114,6 @@ async function validateOptions(options: Input): Promise<{
         sendit: options.sendit ?? DEFAULT_SENDIT_MODE,
         fromCommitAlias: options.fromCommitAlias ?? DEFAULT_FROM_COMMIT_ALIAS,
         toCommitAlias: options.toCommitAlias ?? DEFAULT_TO_COMMIT_ALIAS,
-        version: options.version,
     };
 }
 
