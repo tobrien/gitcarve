@@ -1,4 +1,4 @@
-import { deepMerge } from '../../src/util/general';
+import { deepMerge, stringifyJSON } from '../../src/util/general';
 
 describe('deepMerge', () => {
     test('should merge two flat objects', () => {
@@ -102,5 +102,55 @@ describe('deepMerge', () => {
             },
             data: [4, 5]
         });
+    });
+
+    test('should stringify JSON with proper formatting', () => {
+        const obj = {
+            name: 'test',
+            value: 123,
+            nested: {
+                array: [1, 2, 3],
+                bool: true
+            }
+        };
+
+        const result = stringifyJSON(obj);
+        const expected = `{"name":"test","value":123,"nested":{"array":[1,2,3],"bool":true}}`;
+
+        expect(result).toBe(expected);
+    });
+
+    test('should handle circular references', () => {
+        const obj: any = { name: 'test' };
+        obj.circular = obj;
+
+        const result = stringifyJSON(obj);
+        expect(result).toContain('Maximum depth reached');
+    });
+
+    test('should handle undefined values', () => {
+        const obj = {
+            name: 'test',
+            value: undefined,
+            nested: {
+                empty: undefined
+            }
+        };
+
+        const result = stringifyJSON(obj);
+        expect(result).toBe('{"name":"test",,"nested":{}}');
+    });
+
+    test('should handle null values', () => {
+        const obj = {
+            name: 'test',
+            value: null,
+            nested: {
+                empty: null
+            }
+        };
+
+        const result = stringifyJSON(obj);
+        expect(result).toBe('{"name":"test","value":null,"nested":{"empty":null}}');
     });
 });

@@ -1,12 +1,17 @@
 {
     "name": "@tobrien/gitchange",
-    "version": "0.0.1",
+    "version": "0.1.0",
     "description": "Create Intelligent Release Notes or Change Logs from Git",
     "main": "dist/main.js",
     "type": "module",
     "bin": {
         "gitchange": "./dist/main.js"
     },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/tobrien/gitchange.git"
+    },
+    "packageManager": "pnpm@10.8.0+sha256.29bf2c5ceaea7991ee82eec15fe7162e0fad816d0c4a6b35a16c01d39274bf69",
     "scripts": {
         "build": "vite build",
         "start": "dist/main.js",
@@ -26,13 +31,16 @@
     "author": "Tim O'Brien <tobrien@discursive.com>",
     "license": "Apache-2.0",
     "dependencies": {
+        "@tobrien/minorprompt": "^0.0.2",
         "commander": "^13.1.0",
         "dayjs": "^1.11.13",
         "dotenv": "^16.4.7",
+        "glob": "^11.0.1",
         "js-yaml": "^4.1.0",
         "luxon": "^3.5.0",
         "moment-timezone": "^0.5.48",
         "openai": "^4.91.1",
+        "shell-escape": "^0.2.0",
         "winston": "^3.17.0"
     },
     "devDependencies": {
@@ -45,9 +53,12 @@
         "@types/js-yaml": "^4.0.9",
         "@types/luxon": "^3.4.2",
         "@types/node": "^22.13.14",
+        "@types/shell-escape": "^0.2.3",
         "@types/winston": "^2.4.4",
         "@typescript-eslint/eslint-plugin": "^8.28.0",
         "@typescript-eslint/parser": "^8.28.0",
+        "esbuild": "0.25.0",
+        "eslint": "^9.24.0",
         "eslint-plugin-import": "^2.31.0",
         "globals": "^16.0.0",
         "jest": "^29.7.0",
