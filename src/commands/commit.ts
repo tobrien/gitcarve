@@ -56,7 +56,8 @@ export const execute = async (runConfig: Run.Config) => {
     if (runConfig.sendit) {
         logger.info('SendIt mode enabled. Committing with message', summary);
         try {
-            await run(`git commit -m "${summary}"`);
+            const escapedSummary = summary.replace(/"/g, '\\"');
+            await run(`git commit -m "${escapedSummary}"`);
             logger.info('Commit successful!');
         } catch (error) {
             logger.error('Failed to commit:', error);
