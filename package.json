@@ -24,9 +24,11 @@
         "prepublishOnly": "npm run clean && npm run build"
     },
     "keywords": [
-        "gmail",
-        "export",
-        "gmail-export"
+        "git",
+        "genai",
+        "release",
+        "changelog",
+        "analysis"
     ],
     "author": "Tim O'Brien <tobrien@discursive.com>",
     "license": "Apache-2.0",
