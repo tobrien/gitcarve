@@ -26,9 +26,11 @@
     "author": "Tim O'Brien <tobrien@discursive.com>",
     "license": "Apache-2.0",
     "dependencies": {
+        "@tobrien/minorprompt": "^0.0.2",
         "commander": "^13.1.0",
         "dayjs": "^1.11.13",
         "dotenv": "^16.4.7",
+        "glob": "^11.0.1",
         "js-yaml": "^4.1.0",
         "luxon": "^3.5.0",
         "moment-timezone": "^0.5.48",
