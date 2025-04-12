@@ -1,15 +1,15 @@
 {
-    "name": "@tobrien/gitchange",
+    "name": "@tobrien/gitcarve",
     "version": "0.1.0",
     "description": "Create Intelligent Release Notes or Change Logs from Git",
     "main": "dist/main.js",
     "type": "module",
     "bin": {
-        "gitchange": "./dist/main.js"
+        "gitcarve": "./dist/main.js"
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/tobrien/gitchange.git"
+        "url": "git+https://github.com/tobrien/gitcarve.git"
     },
     "packageManager": "pnpm@10.8.0+sha256.29bf2c5ceaea7991ee82eec15fe7162e0fad816d0c4a6b35a16c01d39274bf69",
     "scripts": {

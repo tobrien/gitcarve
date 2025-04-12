@@ -7,10 +7,10 @@ Git Intelligent Change is a powerful utility designed to automatically generate 
 Install Git Intelligent Change globally using npm:
 
 ```bash
-npm install -g @tobrien/gitchange
+npm install -g @tobrien/gitcarve
 ```
 
-This will make the `gitchange` command available globally on your system.
+This will make the `gitcarve` command available globally on your system.
 
 ## Commands
 
@@ -21,13 +21,13 @@ Git Intelligent Change provides two main commands:
 Generate intelligent commit messages:
 
 ```bash
-gitchange commit
+gitcarve commit
 ```
 
 > [!TIP]
 > ### Working with Staged Changes
 > 
-> When you have staged changes using `git add`, the `gitchange commit` command will automatically analyze the diff of your staged changes. This allows you to selectively stage files and generate a commit message that specifically addresses those changes, rather than all uncommitted changes in your working directory.
+> When you have staged changes using `git add`, the `gitcarve commit` command will automatically analyze the diff of your staged changes. This allows you to selectively stage files and generate a commit message that specifically addresses those changes, rather than all uncommitted changes in your working directory.
 
 > [!TIP]
 > ### Quick Commit with --sendit
@@ -40,18 +40,18 @@ gitchange commit
 Generate comprehensive release notes based on changes since the last release:
 
 ```bash
-gitchange release
+gitcarve release
 ```
 
 > [!TIP]
 > ### Custom Release Range
 > 
-> The `gitchange release` command supports customizing the range of commits to analyze using the `--from` and `--to` options. By default, it compares changes between the `main` branch and `HEAD`, but you can specify any valid Git reference (branch, tag, or commit hash) for either endpoint. This flexibility allows you to generate release notes for specific version ranges or between different branches.
+> The `gitcarve release` command supports customizing the range of commits to analyze using the `--from` and `--to` options. By default, it compares changes between the `main` branch and `HEAD`, but you can specify any valid Git reference (branch, tag, or commit hash) for either endpoint. This flexibility allows you to generate release notes for specific version ranges or between different branches.
 
 > [!TIP]
 > ### Comparing Releases
 > 
-> You can use the `--from` and `--to` options to generate release notes comparing two different releases. For example, to see what changed between v1.0.0 and v1.1.0, you could use `gitchange release --from v1.0.0 --to v1.1.0`. This is particularly useful for creating detailed changelogs when preparing release documentation.
+> You can use the `--from` and `--to` options to generate release notes comparing two different releases. For example, to see what changed between v1.0.0 and v1.1.0, you could use `gitcarve release --from v1.0.0 --to v1.1.0`. This is particularly useful for creating detailed changelogs when preparing release documentation.
 
 
 ## Command Line Options
@@ -90,38 +90,38 @@ Git Intelligent Change provides several command line options to customize its be
 
 ### Instructions
 
-- `-i, --instructions <file>`: Path to custom instructions file for the AI (default: './.gitchange/instructions.md')
+- `-i, --instructions <file>`: Path to custom instructions file for the AI (default: './.gitcarve/instructions.md')
 
 ### Examples
 
 Basic usage with default settings:
 ```bash
-gitchange commit
+gitcarve commit
 ```
 
 Generate a commit message and automatically commit it:
 ```bash
-gitchange commit --sendit
+gitcarve commit --sendit
 ```
 
 Generate release notes:
 ```bash
-gitchange release
+gitcarve release
 ```
 
 Generate a summary including both git log and diff information:
 ```bash
-gitchange release --content-types log diff
+gitcarve release --content-types log diff
 ```
 
 Run in verbose mode with a custom OpenAI model:
 ```bash
-gitchange commit --verbose --model gpt-4
+gitcarve commit --verbose --model gpt-4
 ```
 
 Use custom instructions from a file:
 ```bash
-gitchange release --instructions ./my-custom-instructions.md
+gitcarve release --instructions ./my-custom-instructions.md
 ```
 
 ### Configuration Directory
@@ -129,15 +129,15 @@ gitchange release --instructions ./my-custom-instructions.md
 Git Intelligent Change uses a configuration directory to store custom settings, instructions, and other configuration files. You can specify a custom location using the `--config-dir` option:
 
 ```bash
-gitchange --config-dir ~/custom-gitchange-config
+gitcarve --config-dir ~/custom-gitcarve-config
 ```
 
-By default, the configuration directory is set to `.gitchange` in your current working directory. This directory is created automatically if it doesn't exist.
+By default, the configuration directory is set to `.gitcarve` in your current working directory. This directory is created automatically if it doesn't exist.
 
 The configuration directory structure is as follows:
 
 ```
-.gitchange/
+.gitcarve/
 ├── instructions/
 │   ├── commit.md         # Override for commit instructions
 │   ├── commit-pre.md     # Content prepended to default commit instructions
@@ -152,9 +152,9 @@ The configuration directory structure is as follows:
 
 Git Intelligent Change comes with default instructions that guide the AI in generating release notes or change logs. These instructions are defined in the source code:
 
-- **Commit Instructions**: The default instructions for commit message generation are defined in [src/prompt/instructions/commit.ts](https://github.com/tobrien/gitchange/blob/main/src/prompt/instructions/commit.ts).
+- **Commit Instructions**: The default instructions for commit message generation are defined in [src/prompt/instructions/commit.ts](https://github.com/tobrien/gitcarve/blob/main/src/prompt/instructions/commit.ts).
 
-- **Release Instructions**: The default instructions for release notes generation are defined in [src/prompt/instructions/release.ts](https://github.com/tobrien/gitchange/blob/main/src/prompt/instructions/release.ts).
+- **Release Instructions**: The default instructions for release notes generation are defined in [src/prompt/instructions/release.ts](https://github.com/tobrien/gitcarve/blob/main/src/prompt/instructions/release.ts).
 
 These instruction files contain detailed guidelines for the AI on how to format and structure the output, including examples and specific requirements for different types of changes.
 
@@ -164,10 +164,10 @@ You can override these default instructions in several ways:
 
 1. **Command Line Option**: Use the `--instructions` flag to specify a custom instructions file:
    ```bash
-   gitchange --instructions ./my-custom-instructions.txt
+   gitcarve --instructions ./my-custom-instructions.txt
    ```
 
-2. **Default Location**: Even without specifying a command line option, Git Intelligent Change will automatically look for an instructions file at `./.gitchange/instructions.md` in your current working directory.
+2. **Default Location**: Even without specifying a command line option, Git Intelligent Change will automatically look for an instructions file at `./.gitcarve/instructions.md` in your current working directory.
 
 3. **File Format**: While the default file is named `instructions.md`, you can use any text file with any extension. The content doesn't have to be in Markdown format - any plain text content will work. This gives you flexibility to use your preferred text editor or format for writing instructions.
 
@@ -209,7 +209,7 @@ Here are two example approaches to organizing context files:
 You can organize context in a hierarchical structure with subdirectories for different categories:
 
 ```
-.gitchange/context/
+.gitcarve/context/
 ├── context.md                # Main context file describing sections
 ├── people/                   # Directory for information about people
 │   ├── context.md            # Description of the people section
@@ -229,7 +229,7 @@ You can organize context in a hierarchical structure with subdirectories for dif
 Alternatively, you can use a flatter structure with individual files for each entity:
 
 ```
-.gitchange/context/
+.gitcarve/context/
 ├── context.md                # Main context file describing sections
 ├── people/                   # Directory for individual people information
 │   ├── context.md            # Description of the people section
@@ -266,21 +266,21 @@ After loading the `context.md` file, the system reads all other Markdown files i
 
 You can specify where to store your context files in two recommended ways:
 
-1. **Project Directory**: Store context files in your project repository at `.gitchange/context/`. This is useful when the context is specific to the project and should be versioned with the code.
+1. **Project Directory**: Store context files in your project repository at `.gitcarve/context/`. This is useful when the context is specific to the project and should be versioned with the code.
 
 2. **gitignore Directory**: Alternatively, you can store context in your `.gitignore` directory if you want to keep it separate from your project files or if the context contains sensitive information that shouldn't be committed to the repository.
 
 To specify a custom context directory, use the `--context-dir` option:
 
 ```bash
-gitchange commit --context-dir ~/my-custom-context
+gitcarve commit --context-dir ~/my-custom-context
 ```
 
-By default, Git Intelligent Change looks for context in the `.gitchange/context` directory within your project.
+By default, Git Intelligent Change looks for context in the `.gitcarve/context` directory within your project.
 
 ## Configuration Directory
 
-The configuration directory (configDir) allows you to further customize both commit and release instructions by adding pre and post content to the default instructions. This is done by creating additional files in your `.gitchange/instructions` directory:
+The configuration directory (configDir) allows you to further customize both commit and release instructions by adding pre and post content to the default instructions. This is done by creating additional files in your `.gitcarve/instructions` directory:
 
 ### Release Instructions
 1. **Pre-Content**: Create a file named `release-pre.md` to add content that will be prepended to the default release instructions.
@@ -290,11 +290,11 @@ The configuration directory (configDir) allows you to further customize both com
 1. **Pre-Content**: Create a file named `commit-pre.md` to add content that will be prepended to the default commit instructions.
 2. **Post-Content**: Create a file named `commit-post.md` to add content that should be appended to the default commit instructions.
 
-For example, if you want to add specific formatting requirements before the default release instructions, you could create `.gitchange/instructions/release-pre.md`, and if you want to add instructions to the end of the commit instrucitons, you would have a file in `.gitchange/instructions/commit-post.md`.
+For example, if you want to add specific formatting requirements before the default release instructions, you could create `.gitcarve/instructions/release-pre.md`, and if you want to add instructions to the end of the commit instrucitons, you would have a file in `.gitcarve/instructions/commit-post.md`.
 
 ### Overriding Default Instructions
 
-While the pre and post content files provide a way to extend the default instructions, you can also completely replace them by creating either `commit.md` or `release.md` in your `.gitchange/instructions` directory. This gives you full control over the instruction content.
+While the pre and post content files provide a way to extend the default instructions, you can also completely replace them by creating either `commit.md` or `release.md` in your `.gitcarve/instructions` directory. This gives you full control over the instruction content.
 
 However, please note that completely replacing the default instructions should be done with caution. The default instructions are carefully crafted to:
 - Ensure consistent formatting
