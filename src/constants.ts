@@ -4,6 +4,7 @@ export const DEFAULT_CHARACTER_ENCODING = 'utf-8';
 export const DEFAULT_BINARY_TO_TEXT_ENCODING = 'base64';
 export const DEFAULT_DIFF = true;
 export const DEFAULT_LOG = false;
+export const DEFAULT_OVERRIDES = false;
 export const DATE_FORMAT_MONTH_DAY = 'MM-DD';
 export const DATE_FORMAT_YEAR = 'YYYY';
 export const DATE_FORMAT_YEAR_MONTH = 'YYYY-MM';
@@ -23,23 +24,27 @@ export const DEFAULT_DRY_RUN = false;
 export const DEFAULT_DEBUG = false;
 export const DEFAULT_MODEL = 'gpt-4o-mini';
 export const DEFAULT_CONTENT_TYPES = ['diff'];
+export const DEFAULT_CONTEXT_DIRECTORIES: string[] = [];
+
+export const COMMAND_COMMIT = 'commit';
+export const COMMAND_RELEASE = 'release';
+export const ALLOWED_COMMANDS = [COMMAND_COMMIT, COMMAND_RELEASE];
+export const DEFAULT_COMMAND = COMMAND_COMMIT;
 
 export const ALLOWED_CONTENT_TYPES = ['log', 'diff'];
 
-export const DEFAULT_INSTRUCTIONS_FILE = './.gitchange/instructions.md';
+export const DEFAULT_CONFIG_DIR = `.${PROGRAM_NAME}`;
 
-export const DEFAULT_INSTRUCTIONS = `
-You are a helpful assistant that can write a release note or change log from a git commit message.
+export const DEFAULT_PERSONAS_DIR = `/personas`;
 
-The release note or change log should be written in markdown format.
+export const DEFAULT_PERSONA_YOU_TRAITS_FILE = `${DEFAULT_PERSONAS_DIR}/you/traits.md`;
+export const DEFAULT_PERSONA_YOU_INSTRUCTIONS_FILE = `${DEFAULT_PERSONAS_DIR}/you/instructions.md`;
 
-The release note or change log should be written in the following format:
+export const DEFAULT_INSTRUCTIONS_DIR = `/instructions`;
 
-# Release Note or Change Log
+export const DEFAULT_INSTRUCTIONS_COMMIT_FILE = `${DEFAULT_INSTRUCTIONS_DIR}/commit.md`;
+export const DEFAULT_INSTRUCTIONS_RELEASE_FILE = `${DEFAULT_INSTRUCTIONS_DIR}/release.md`;
 
-## Summary
+export const DEFAULT_CACHED = false;
 
-## Details
-
-## Notes
-`;
+export const DEFAULT_SENDIT_MODE = false;
