@@ -13,6 +13,7 @@ export class OpenAIError extends Error {
     }
 }
 
+
 export async function createCompletion(messages: ChatCompletionMessageParam[], options: { responseFormat?: any, model?: string, debug?: boolean, debugFile?: string } = { model: "gpt-4o-mini" }): Promise<string | any> {
     const logger = getLogger();
     const storage = Storage.create({ log: logger.debug });
