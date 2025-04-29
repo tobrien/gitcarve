@@ -4,6 +4,7 @@ contextDirectories:
   - .gitcarve/context/people
   - .gitcarve/context/projects
 commit:
+  cached: true
   sendit: true
 release:
   from: main
