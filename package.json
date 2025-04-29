@@ -1,6 +1,6 @@
 {
     "name": "@tobrien/gitcarve",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "description": "Create Intelligent Release Notes or Change Logs from Git",
     "main": "dist/main.js",
     "type": "module",
