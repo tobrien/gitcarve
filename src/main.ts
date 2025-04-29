@@ -1,14 +1,27 @@
 #!/usr/bin/env node
+import * as GiveMeTheConfig from '@tobrien/givemetheconfig';
 import 'dotenv/config';
+import { z } from 'zod';
 import * as Arguments from './arguments';
 import * as Commit from './commands/commit';
 import * as Release from './commands/release';
-import { COMMAND_COMMIT, COMMAND_RELEASE } from './constants';
+import { COMMAND_COMMIT, COMMAND_RELEASE, DEFAULT_CONFIG_DIR } from './constants';
 import { getLogger, setLogLevel } from './logging';
-import * as Run from './run';
+import { CommandConfig } from 'types';
+import { Config, ConfigSchema, SecureConfig } from './types';
 
 export async function main() {
-    const [runConfig]: [Run.Config] = await Arguments.configure();
+
+    const givemetheconfig = GiveMeTheConfig.create<typeof ConfigSchema.shape>({
+        defaults: {
+            configDirectory: DEFAULT_CONFIG_DIR, // Default directory for config file
+        },
+        configShape: ConfigSchema.shape, // Pass the Zod shape for validation
+        logger: getLogger(),           // Optional: Pass logger instance
+    });
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [runConfig, secureConfig, commandConfig]: [Config, SecureConfig, CommandConfig] = await Arguments.configure(givemetheconfig); // Pass givemetheconfig instance
 
     // Set log level based on verbose flag
     if (runConfig.verbose) {
@@ -23,7 +36,7 @@ export async function main() {
     try {
         // Get the command from Commander
         const command = process.argv[2];
-        let commandName = runConfig.commandName;
+        let commandName = commandConfig.commandName;
 
         // If we have a specific command argument, use that
         if (command === 'commit' || command === 'release') {

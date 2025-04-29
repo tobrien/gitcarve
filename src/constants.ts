@@ -49,3 +49,24 @@ export const DEFAULT_SENDIT_MODE = false;
 export const DEFAULT_FROM_COMMIT_ALIAS = 'main';
 export const DEFAULT_TO_COMMIT_ALIAS = 'HEAD';
 export const DEFAULT_VERSION = '1.0.0';
+
+// Define defaults in one place
+export const GITCARVE_DEFAULTS = {
+    dryRun: DEFAULT_DRY_RUN,
+    verbose: DEFAULT_VERBOSE,
+    debug: DEFAULT_DEBUG,
+    overrides: DEFAULT_OVERRIDES,
+    model: DEFAULT_MODEL,
+    instructions: DEFAULT_INSTRUCTIONS_DIR,
+    contextDirectories: DEFAULT_CONTEXT_DIRECTORIES,
+    commandName: DEFAULT_COMMAND,
+    configDirectory: DEFAULT_CONFIG_DIR,
+    commit: {
+        cached: DEFAULT_CACHED,
+        sendit: DEFAULT_SENDIT_MODE,
+    },
+    release: {
+        from: DEFAULT_FROM_COMMIT_ALIAS,
+        to: DEFAULT_TO_COMMIT_ALIAS,
+    },
+};

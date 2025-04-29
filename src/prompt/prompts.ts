@@ -1,7 +1,7 @@
 import * as MinorPrompt from '@tobrien/minorprompt';
 import * as Chat from '@tobrien/minorprompt/chat';
 import * as Formatter from '@tobrien/minorprompt/formatter';
-import { Config as RunConfig } from '../run';
+import { Config as RunConfig } from '../types';
 import * as CommitInstructions from './instructions/commit';
 import * as ReleaseInstructions from './instructions/release';
 import * as YouPersona from './persona/you';
@@ -38,7 +38,12 @@ export const create = (model: Chat.Model, runConfig: RunConfig): Factory => {
         const underscorePreFile = baseFile.replace('.md', '_pre.md');
         const underscorePostFile = baseFile.replace('.md', '_post.md');
 
-        if (await storage.exists(underscorePreFile) || await storage.exists(underscorePostFile)) {
+        if (await storage.exists(underscorePreFile)) {
+            logger.error('ERROR: Found files with underscore instead of hyphen. Please use hyphens (-) instead of underscores (_) in file names.');
+            throw new Error('Invalid file naming convention. Use hyphens (-) instead of underscores (_) in file names.');
+        }
+
+        if (await storage.exists(underscorePostFile)) {
             logger.error('ERROR: Found files with underscore instead of hyphen. Please use hyphens (-) instead of underscores (_) in file names.');
             throw new Error('Invalid file naming convention. Use hyphens (-) instead of underscores (_) in file names.');
         }
@@ -74,8 +79,8 @@ export const create = (model: Chat.Model, runConfig: RunConfig): Factory => {
     const createCommitPrompt = async (content: Section<Content>[]): Promise<MinorPrompt.Instance> => {
         const prompt: MinorPrompt.Instance = MinorPrompt.create();
         // TODO: Passing this function?  It's hateful.  Let's fix this.
-        prompt.addPersona(await YouPersona.create(runConfig.configDir, { customizeContent }));
-        const instructions = await CommitInstructions.create(runConfig.configDir, { generateOverrideContent });
+        prompt.addPersona(await YouPersona.create(runConfig.configDirectory, { customizeContent }));
+        const instructions = await CommitInstructions.create(runConfig.configDirectory, { generateOverrideContent });
         instructions.forEach((instruction) => {
             prompt.addInstruction(instruction);
         });
@@ -93,8 +98,8 @@ export const create = (model: Chat.Model, runConfig: RunConfig): Factory => {
 
     const createReleasePrompt = async (content: Section<Content>[]): Promise<MinorPrompt.Instance> => {
         const prompt: MinorPrompt.Instance = MinorPrompt.create();
-        prompt.addPersona(await YouPersona.create(runConfig.configDir, { customizeContent }));
-        const instructions = await ReleaseInstructions.create(runConfig.configDir, { customizeContent });
+        prompt.addPersona(await YouPersona.create(runConfig.configDirectory, { customizeContent }));
+        const instructions = await ReleaseInstructions.create(runConfig.configDirectory, { customizeContent });
         instructions.forEach((instruction) => {
             prompt.addInstruction(instruction);
         });
