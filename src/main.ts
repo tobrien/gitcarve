@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 import * as GiveMeTheConfig from '@tobrien/givemetheconfig';
 import 'dotenv/config';
-import { z } from 'zod';
 import * as Arguments from './arguments';
 import * as Commit from './commands/commit';
 import * as Release from './commands/release';
