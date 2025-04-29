@@ -1,6 +1,6 @@
 {
     "name": "@tobrien/gitcarve",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "description": "Create Intelligent Release Notes or Change Logs from Git",
     "main": "dist/main.js",
     "type": "module",
@@ -11,9 +11,9 @@
         "type": "git",
         "url": "git+https://github.com/tobrien/gitcarve.git"
     },
-    "packageManager": "pnpm@10.8.0+sha256.29bf2c5ceaea7991ee82eec15fe7162e0fad816d0c4a6b35a16c01d39274bf69",
+    "packageManager": "pnpm@10.10.0",
     "scripts": {
-        "build": "vite build",
+        "build": "tsc --noEmit && vite build",
         "start": "dist/main.js",
         "dev": "vite",
         "watch": "vite build --watch",
@@ -33,6 +33,7 @@
     "author": "Tim O'Brien <tobrien@discursive.com>",
     "license": "Apache-2.0",
     "dependencies": {
+        "@tobrien/givemetheconfig": "^0.0.2",
         "@tobrien/minorprompt": "^0.0.2",
         "commander": "^13.1.0",
         "dayjs": "^1.11.13",
@@ -43,7 +44,8 @@
         "moment-timezone": "^0.5.48",
         "openai": "^4.91.1",
         "shell-escape": "^0.2.0",
-        "winston": "^3.17.0"
+        "winston": "^3.17.0",
+        "zod": "^3.24.3"
     },
     "devDependencies": {
         "@eslint/eslintrc": "^3.3.1",
@@ -69,7 +71,7 @@
         "rollup-plugin-visualizer": "^5.14.0",
         "ts-jest": "^29.2.6",
         "typescript": "^5.3.3",
-        "vite": "^6.3.3",
-        "vite-plugin-node": "^3.1.0"
+        "vite": "^6.2.5",
+        "vite-plugin-node": "^5.0.0"
     }
 }

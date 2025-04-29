@@ -1,19 +1,20 @@
 #!/usr/bin/env node
 import { Content, createSection, Section } from '@tobrien/minorprompt';
+import * as Chat from '@tobrien/minorprompt/chat';
 import 'dotenv/config';
-import { createCompletion } from '../util/openai';
+import { Config } from '../types';
+import { ChatCompletionMessageParam } from 'openai/resources';
 import * as Log from '../content/log';
 import * as Prompts from '../prompt/prompts';
-import * as Run from '../run';
-import * as Chat from '@tobrien/minorprompt/chat';
-import { ChatCompletionMessageParam } from 'openai/resources';
+import { createCompletion } from '../util/openai';
+import { DEFAULT_FROM_COMMIT_ALIAS, DEFAULT_TO_COMMIT_ALIAS } from '../constants';
 
-export const execute = async (runConfig: Run.Config) => {
+export const execute = async (runConfig: Config) => {
     const prompts = await Prompts.create(runConfig.model as Chat.Model, runConfig);
 
     const contentSections: Section<Content>[] = [];
 
-    const log = await Log.create({ fromCommitAlias: runConfig.fromCommitAlias, toCommitAlias: runConfig.toCommitAlias });
+    const log = await Log.create({ from: runConfig.release?.from ?? DEFAULT_FROM_COMMIT_ALIAS, to: runConfig.release?.to ?? DEFAULT_TO_COMMIT_ALIAS });
     let logContent = '';
 
     logContent = await log.get();
