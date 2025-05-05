@@ -1,7 +1,3 @@
-import { Instruction, Section, createInstruction } from "@tobrien/minorprompt";
-import { DEFAULT_INSTRUCTIONS_COMMIT_FILE } from "../../constants";
-
-const INSTRUCTIONS = `
 Task #1: Create a commit message for the changes that in the diff section of the content.
 
 Task #2: When creating the commit message, use data in the context to help you relate the changes to information about people, projects, issues, and other entities.
@@ -50,31 +46,3 @@ Example #4: A large change that affects multiples files and which also includes 
     - Included the \`glob\` module with version \`^11.0.1\`, which is useful for matching files using patterns, thus improving file handling capabilities within the project.
 
     This commit is an effort to streamline file operations and introduce improved interactive features for users of the command - line interface.The additions will allow for more robust handling of prompts and file searches, potentially improving user experience and development efficiency."
-`;
-
-export const create = async (configDir: string, { generateOverrideContent }: { generateOverrideContent: (configDir: string, overrideFile: string) => Promise<{ override?: string, prepend?: string, append?: string }> }): Promise<(Instruction | Section<Instruction>)[]> => {
-    const instructions: (Instruction | Section<Instruction>)[] = [];
-
-    const overrideContent = await generateOverrideContent(configDir, DEFAULT_INSTRUCTIONS_COMMIT_FILE);
-
-    if (overrideContent.override) {
-        const instruction = createInstruction(overrideContent.override);
-        instructions.push(instruction);
-    } else {
-        const instruction = createInstruction(INSTRUCTIONS);
-        instructions.push(instruction);
-    }
-
-    if (overrideContent.prepend) {
-        const instruction = createInstruction(overrideContent.prepend);
-        instructions.unshift(instruction);
-    }
-
-    if (overrideContent.append) {
-        const instruction = createInstruction(overrideContent.append);
-        instructions.push(instruction);
-    }
-
-    return instructions;
-}
-
