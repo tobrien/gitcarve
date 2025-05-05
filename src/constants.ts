@@ -34,8 +34,7 @@ export const DEFAULT_CONFIG_DIR = `.${PROGRAM_NAME}`;
 
 export const DEFAULT_PERSONAS_DIR = `/personas`;
 
-export const DEFAULT_PERSONA_YOU_TRAITS_FILE = `${DEFAULT_PERSONAS_DIR}/you/traits.md`;
-export const DEFAULT_PERSONA_YOU_INSTRUCTIONS_FILE = `${DEFAULT_PERSONAS_DIR}/you/instructions.md`;
+export const DEFAULT_PERSONA_YOU_FILE = `${DEFAULT_PERSONAS_DIR}/you.md`;
 
 export const DEFAULT_INSTRUCTIONS_DIR = `/instructions`;
 

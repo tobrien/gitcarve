@@ -1,33 +1,30 @@
 import { jest } from '@jest/globals';
-import { ChatCompletionMessageParam } from 'openai/resources';
 
 // Mock ESM modules
-jest.unstable_mockModule('../../src/content/diff', () => ({
+jest.unstable_mockModule('@tobrien/minorprompt', () => ({
     // @ts-ignore
-    create: jest.fn().mockResolvedValue({
-        // @ts-ignore
-        get: jest.fn().mockResolvedValue('mock diff content')
+    createSection: jest.fn().mockReturnValue({
+        add: jest.fn()
+    }),
+    Model: {
+        GPT_4: 'gpt-4'
+    }
+}));
+
+jest.unstable_mockModule('../../src/prompt/prompts', () => ({
+    // @ts-ignore
+    create: jest.fn().mockReturnValue({
+        // @ts-ignores
+        createReleasePrompt: jest.fn().mockResolvedValue({}),
+        format: jest.fn().mockReturnValue({ messages: [] })
     })
 }));
 
 jest.unstable_mockModule('../../src/content/log', () => ({
     // @ts-ignore
-    create: jest.fn().mockResolvedValue({
+    create: jest.fn().mockReturnValue({
         // @ts-ignore
         get: jest.fn().mockResolvedValue('mock log content')
-    })
-}));
-
-jest.unstable_mockModule('../../src/prompt/prompts', () => ({
-    // @ts-ignore
-    create: jest.fn().mockResolvedValue({
-        // @ts-ignore
-        createReleasePrompt: jest.fn().mockResolvedValue('mock prompt'),
-        // @ts-ignore
-        format: jest.fn().mockReturnValue({
-            // @ts-ignore
-            messages: [] as ChatCompletionMessageParam[]
-        })
     })
 }));
 
@@ -38,17 +35,17 @@ jest.unstable_mockModule('../../src/util/openai', () => ({
 
 describe('release command', () => {
     let Release: any;
-    let Diff: any;
-    let Log: any;
+    let MinorPrompt: any;
     let Prompts: any;
-    let createCompletion: any;
+    let Log: any;
+    let OpenAI: any;
 
     beforeEach(async () => {
         // Import modules after mocking
-        Diff = await import('../../src/content/diff');
-        Log = await import('../../src/content/log');
+        MinorPrompt = await import('@tobrien/minorprompt');
         Prompts = await import('../../src/prompt/prompts');
-        createCompletion = await import('../../src/util/openai');
+        Log = await import('../../src/content/log');
+        OpenAI = await import('../../src/util/openai');
         Release = await import('../../src/commands/release');
     });
 
@@ -56,19 +53,55 @@ describe('release command', () => {
         jest.clearAllMocks();
     });
 
-
-    it('should run release command with log content', async () => {
+    it('should execute release command with default parameters', async () => {
         const runConfig = {
-            model: 'gpt-4',
-            contentTypes: ['log']
+            model: 'gpt-4'
         };
 
         const result = await Release.execute(runConfig);
 
-        expect(Log.create).toHaveBeenCalled();
-        expect(Prompts.create).toHaveBeenCalledWith(runConfig.model, runConfig);
-        expect(createCompletion.createCompletion).toHaveBeenCalled();
+        expect(Log.create).toHaveBeenCalledWith({
+            from: 'main',
+            to: 'HEAD'
+        });
+        expect(Prompts.create).toHaveBeenCalledWith('gpt-4', runConfig);
+        expect(MinorPrompt.createSection).toHaveBeenCalledWith('release');
+        expect(OpenAI.createCompletion).toHaveBeenCalled();
         expect(result).toBe('mock summary');
     });
 
+    it('should execute release command with custom parameters', async () => {
+        const runConfig = {
+            model: 'gpt-4',
+            release: {
+                from: 'v1.0.0',
+                to: 'main'
+            }
+        };
+
+        const result = await Release.execute(runConfig);
+
+        expect(Log.create).toHaveBeenCalledWith({
+            from: 'v1.0.0',
+            to: 'main'
+        });
+        expect(Prompts.create).toHaveBeenCalledWith('gpt-4', runConfig);
+        expect(result).toBe('mock summary');
+    });
+
+    it('should not add log section when log content is empty', async () => {
+        const runConfig = {
+            model: 'gpt-4'
+        };
+
+        // Mock empty log content
+        Log.create().get.mockResolvedValueOnce('');
+
+        const result = await Release.execute(runConfig);
+
+        // The section.add should not be called with log section
+        const sectionAddCalls = MinorPrompt.createSection().add.mock.calls;
+        expect(sectionAddCalls.length).toBe(0);
+        expect(result).toBe('mock summary');
+    });
 });

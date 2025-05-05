@@ -1,6 +1,5 @@
 #!/usr/bin/env node
-import { Content, createSection, Section } from '@tobrien/minorprompt';
-import * as Chat from '@tobrien/minorprompt/chat';
+import { Content, createSection, Model, Section, Request } from '@tobrien/minorprompt';
 import 'dotenv/config';
 import { Config } from '../types';
 import { ChatCompletionMessageParam } from 'openai/resources';
@@ -13,9 +12,9 @@ import { createCompletion } from '../util/openai';
 
 export const execute = async (runConfig: Config) => {
     const logger = getLogger();
-    const prompts = Prompts.create(runConfig.model as Chat.Model, runConfig);
+    const prompts = Prompts.create(runConfig.model as Model, runConfig);
 
-    const contentSections: Section<Content>[] = [];
+    const contentSections: Section<Content> = createSection<Content>('commit');
 
     let diffContent = '';
 
@@ -30,12 +29,12 @@ export const execute = async (runConfig: Config) => {
 
     const diffSection = createSection<Content>('diff');
     diffSection.add(diffContent);
-    contentSections.push(diffSection);
+    contentSections.add(diffSection);
 
 
     const prompt = await prompts.createCommitPrompt(contentSections);
 
-    const request: Chat.Request = prompts.format(prompt);
+    const request: Request = prompts.format(prompt);
 
     const summary = await createCompletion(request.messages as ChatCompletionMessageParam[], { model: runConfig.model });
 
