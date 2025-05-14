@@ -9,12 +9,11 @@ import { getLogger } from '../logging';
 import * as Prompts from '../prompt/prompts';
 import { run } from '../util/child';
 import { createCompletion } from '../util/openai';
+import { DEFAULT_EXCLUDED_PATTERNS } from '../constants';
 
 export const execute = async (runConfig: Config) => {
     const logger = getLogger();
     const prompts = Prompts.create(runConfig.model as Model, runConfig);
-
-    const contentSections: Section<Content> = createSection<Content>('commit');
 
     let diffContent = '';
 
@@ -23,16 +22,11 @@ export const execute = async (runConfig: Config) => {
     if (runConfig.commit?.cached === undefined) {
         cached = await Diff.hasStagedChanges();
     }
-    const options = { cached };
+    const options = { cached, excludedPatterns: runConfig.excludedPatterns ?? DEFAULT_EXCLUDED_PATTERNS };
     const diff = await Diff.create(options);
     diffContent = await diff.get();
 
-    const diffSection = createSection<Content>('diff');
-    diffSection.add(diffContent);
-    contentSections.add(diffSection);
-
-
-    const prompt = await prompts.createCommitPrompt(contentSections);
+    const prompt = await prompts.createCommitPrompt(diffContent);
 
     const request: Request = prompts.format(prompt);
 

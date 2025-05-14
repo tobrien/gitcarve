@@ -98,7 +98,7 @@ describe('commit', () => {
 
         // Assert
         expect(result).toBe(mockSummary);
-        expect(Diff.create).toHaveBeenCalledWith({ cached: true });
+        expect(Diff.create).toHaveBeenCalledWith({ cached: true, excludedPatterns: ['node_modules', 'pnpm-lock.yaml', 'package-lock.json', 'yarn.lock', 'bun.lockb', 'composer.lock', 'Cargo.lock', 'Gemfile.lock', 'dist', 'build', 'out', '.next', '.nuxt', 'coverage', '.vscode', '.idea', '.DS_Store', '.git', '.gitignore', 'logs', 'tmp', '.cache', '*.log', '.env', '.env.*', '*.pem', '*.crt', '*.key', '*.sqlite', '*.db', '*.zip', '*.tar', '*.gz', '*.exe', '*.bin'] });
         expect(OpenAI.createCompletion).toHaveBeenCalled();
     });
 
@@ -123,7 +123,7 @@ describe('commit', () => {
 
         // Assert
         expect(Diff.hasStagedChanges).toHaveBeenCalled();
-        expect(Diff.create).toHaveBeenCalledWith({ cached: true });
+        expect(Diff.create).toHaveBeenCalledWith({ cached: true, excludedPatterns: ['node_modules', 'pnpm-lock.yaml', 'package-lock.json', 'yarn.lock', 'bun.lockb', 'composer.lock', 'Cargo.lock', 'Gemfile.lock', 'dist', 'build', 'out', '.next', '.nuxt', 'coverage', '.vscode', '.idea', '.DS_Store', '.git', '.gitignore', 'logs', 'tmp', '.cache', '*.log', '.env', '.env.*', '*.pem', '*.crt', '*.key', '*.sqlite', '*.db', '*.zip', '*.tar', '*.gz', '*.exe', '*.bin'] });
     });
 
     it('should commit changes when sendit is true and changes are staged', async () => {

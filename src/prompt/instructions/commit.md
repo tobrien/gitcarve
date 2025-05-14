@@ -1,4 +1,4 @@
-Task #1: Create a commit message for the changes that in the diff section of the content.
+Task #1: Create a commit message for the changes that are in the content.
 
 Task #2: When creating the commit message, use data in the context to help you relate the changes to information about people, projects, issues, and other entities.
 

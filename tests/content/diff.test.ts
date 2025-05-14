@@ -37,10 +37,10 @@ describe('diff', () => {
         const mockDiff = 'mock diff content';
         run.run.mockResolvedValue({ stdout: mockDiff, stderr: '' });
 
-        const diff = await Diff.create({ cached: true });
+        const diff = await Diff.create({ cached: true, excludedPatterns: ['whatever'] });
         const result = await diff.get();
 
-        expect(run.run).toHaveBeenCalledWith('git diff --cached -- . \': (exclude)dist\' \': (exclude)node_modules\' \': (exclude).env\'');
+        expect(run.run).toHaveBeenCalledWith('git diff --cached -- . \':(exclude)whatever\'');
         expect(result).toBe(mockDiff);
     });
 
@@ -49,10 +49,10 @@ describe('diff', () => {
         const mockStderr = 'warning message';
         run.run.mockResolvedValue({ stdout: mockDiff, stderr: mockStderr });
 
-        const diff = await Diff.create({ cached: true });
+        const diff = await Diff.create({ cached: true, excludedPatterns: ['whatever'] });
         const result = await diff.get();
 
-        expect(run.run).toHaveBeenCalledWith('git diff --cached -- . \': (exclude)dist\' \': (exclude)node_modules\' \': (exclude).env\'');
+        expect(run.run).toHaveBeenCalledWith('git diff --cached -- . \':(exclude)whatever\'');
         expect(result).toBe(mockDiff);
         expect(getLogger.getLogger().warn).toHaveBeenCalledWith('Git log produced stderr: %s', mockStderr);
     });
@@ -61,7 +61,7 @@ describe('diff', () => {
         const mockError = new Error('git diff failed');
         run.run.mockRejectedValue(mockError);
 
-        const diff = await Diff.create({ cached: false });
+        const diff = await Diff.create({ cached: false, excludedPatterns: ['whatever'] });
 
         await expect(diff.get()).rejects.toThrow(ExitError);
         expect(getLogger.getLogger().error).toHaveBeenCalledWith('Failed to execute git log: %s', mockError.message);

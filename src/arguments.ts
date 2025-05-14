@@ -21,6 +21,7 @@ export const InputSchema = z.object({
     sendit: z.boolean().optional(),
     from: z.string().optional(),
     to: z.string().optional(),
+    excludedPatterns: z.array(z.string()).optional(),
 });
 
 export type Input = z.infer<typeof InputSchema>;
@@ -54,6 +55,8 @@ export const transformCliArgs = (finalCliArgs: Input): Partial<Config> => {
         if (finalCliArgs.from !== undefined) transformedCliArgs.release.from = finalCliArgs.from;
         if (finalCliArgs.to !== undefined) transformedCliArgs.release.to = finalCliArgs.to;
     }
+
+    if (finalCliArgs.excludedPatterns !== undefined) transformedCliArgs.excludedPatterns = finalCliArgs.excludedPatterns;
 
     // Note: finalCliArgs.openaiApiKey is intentionally omitted here as it belongs to SecureConfig
 
@@ -116,7 +119,8 @@ function getCliConfig(program: Command): [Input, CommandConfig] {
             .option('--model <model>', 'OpenAI model to use')
             .option('-d, --context-directories [contextDirectories...]', 'directories to scan for context')
             .option('-i, --instructions <file>', 'instructions for the AI')
-            .option('--config-dir <configDir>', 'configuration directory'); // Keep config-dir for specifying location
+            .option('--config-dir <configDir>', 'configuration directory') // Keep config-dir for specifying location
+            .option('--excluded-paths [excludedPatterns...]', 'paths to exclude from the diff');
     }
 
     // Add subcommands
@@ -200,7 +204,8 @@ async function validateAndProcessOptions(options: Partial<Config>): Promise<Conf
         release: {
             from: options.release?.from ?? GITCARVE_DEFAULTS.release.from,
             to: options.release?.to ?? GITCARVE_DEFAULTS.release.to,
-        }
+        },
+        excludedPatterns: options.excludedPatterns ?? GITCARVE_DEFAULTS.excludedPatterns,
     };
 
     // Final validation against the MainConfig shape (optional, givemetheconfig might handle it)
