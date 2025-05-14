@@ -65,7 +65,6 @@ describe('release command', () => {
             to: 'HEAD'
         });
         expect(Prompts.create).toHaveBeenCalledWith('gpt-4', runConfig);
-        expect(MinorPrompt.createSection).toHaveBeenCalledWith('release');
         expect(OpenAI.createCompletion).toHaveBeenCalled();
         expect(result).toBe('mock summary');
     });

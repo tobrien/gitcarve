@@ -49,6 +49,57 @@ export const DEFAULT_FROM_COMMIT_ALIAS = 'main';
 export const DEFAULT_TO_COMMIT_ALIAS = 'HEAD';
 export const DEFAULT_VERSION = '1.0.0';
 
+export const DEFAULT_EXCLUDED_PATTERNS: string[] = [
+    // Node modules & dependency files
+    "node_modules",
+    "pnpm-lock.yaml",
+    "package-lock.json",
+    "yarn.lock",
+    "bun.lockb",
+    "composer.lock",
+    "Cargo.lock",
+    "Gemfile.lock",
+
+    // Build output
+    "dist",
+    "build",
+    "out",
+    ".next",
+    ".nuxt",
+    "coverage",
+
+    // IDE & OS files
+    ".vscode",
+    ".idea",
+    ".DS_Store",
+
+    // Version control
+    ".git",
+    ".gitignore",
+
+    // Logs, caches, and temp
+    "logs",
+    "tmp",
+    ".cache",
+    "*.log",
+
+    // Sensitive data
+    ".env",
+    ".env.*",
+    "*.pem",
+    "*.crt",
+    "*.key",
+
+    // Binary and database files
+    "*.sqlite",
+    "*.db",
+    "*.zip",
+    "*.tar",
+    "*.gz",
+    "*.exe",
+    "*.bin",
+];
+
 // Define defaults in one place
 export const GITCARVE_DEFAULTS = {
     dryRun: DEFAULT_DRY_RUN,
@@ -68,4 +119,5 @@ export const GITCARVE_DEFAULTS = {
         from: DEFAULT_FROM_COMMIT_ALIAS,
         to: DEFAULT_TO_COMMIT_ALIAS,
     },
+    excludedPatterns: DEFAULT_EXCLUDED_PATTERNS,
 };

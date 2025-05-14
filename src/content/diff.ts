@@ -7,7 +7,7 @@ export interface Instance {
     get(): Promise<string>;
 }
 
-export const create = async (options: { cached?: boolean }): Promise<Instance> => {
+export const create = async (options: { cached?: boolean, excludedPatterns: string[] }): Promise<Instance> => {
     const logger = getLogger();
 
     async function get(): Promise<string> {
@@ -16,7 +16,8 @@ export const create = async (options: { cached?: boolean }): Promise<Instance> =
 
             try {
                 logger.debug('Executing git diff');
-                const command = options.cached ? 'git diff --cached -- . \': (exclude)dist\' \': (exclude)node_modules\' \': (exclude).env\'' : 'git diff -- . \': (exclude)dist\' \': (exclude)node_modules\' \': (exclude).env\'';
+                const excludeString = options.excludedPatterns.map(p => `':(exclude)${p}'`).join(' ');
+                const command = options.cached ? `git diff --cached -- . ${excludeString}` : `git diff -- . ${excludeString}`;
                 const { stdout, stderr } = await run(command);
                 if (stderr) {
                     logger.warn('Git log produced stderr: %s', stderr);

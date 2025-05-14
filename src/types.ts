@@ -17,6 +17,7 @@ export const ConfigSchema = z.object({
         from: z.string().optional(),
         to: z.string().optional(),
     }).optional(),
+    excludedPatterns: z.array(z.string()).optional(),
 });
 
 export const SecureConfigSchema = z.object({
