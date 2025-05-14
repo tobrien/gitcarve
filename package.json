@@ -17,7 +17,7 @@
         "start": "dist/main.js",
         "dev": "vite",
         "watch": "vite build --watch",
-        "test": "NODE_OPTIONS=--experimental-vm-modules jest",
+        "test": "NODE_OPTIONS=--experimental-vm-modules jest --coverage",
         "lint": "eslint . --ext .ts",
         "lint:fix": "eslint . --ext .ts --fix",
         "clean": "rm -rf dist",
